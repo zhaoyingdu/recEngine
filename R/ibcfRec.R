@@ -13,6 +13,8 @@ connectDB <- function(){
 }
 
 
+
+
 ibcfRec = function(userID){
   # todo: 
   connection = connectDB()
@@ -32,4 +34,3 @@ ibcfRec = function(userID){
   as(recommendation, "list")  
 }
 
-ibcfRec('501')
