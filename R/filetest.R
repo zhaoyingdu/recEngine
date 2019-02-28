@@ -9,5 +9,6 @@ filetest = function(){
       "2015-03-27")),
    stringsAsFactors = FALSE
   )
-  save(emp.data,'sample.RData')
+  file.create('sample.rds')
+  saveRDS(emp.data,'sample.rds')
 }
