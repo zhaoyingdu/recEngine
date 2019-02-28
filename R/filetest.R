@@ -11,5 +11,5 @@ filetest = function(path){
   )
   file.create('sample.rds')
   saveRDS(emp.data,'sample.rds')
-  data<-loadRDS(path)
+  data<-readRDS(path)
 }
