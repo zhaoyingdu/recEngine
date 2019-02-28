@@ -1,5 +1,5 @@
 
-filetest = function(){
+filetest = function(path){
   emp.data <- data.frame(
    emp_id = c (1:5), 
    emp_name = c("Rick","Dan","Michelle","Ryan","Gary"),
@@ -11,4 +11,5 @@ filetest = function(){
   )
   file.create('sample.rds')
   saveRDS(emp.data,'sample.rds')
+  data<-loadRDS(path)
 }
