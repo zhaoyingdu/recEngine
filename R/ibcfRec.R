@@ -1,8 +1,27 @@
+require('RPostgreSQL')
+require('recommenderlab')
+
+connectDB <- function(){
+  username<-'postgres'
+  password<-'zhaoyingdu'
+  driver<-dbDriver('PostgreSQL')
+  connection<-dbConnect(drv = driver, dbname='temp',
+      host='127.0.0.1', port = 5109,
+      user=username, password = password
+    )
+  #print(dbGetInfo(connection))
+}
+
 
 ibcfRec = function(userID){
-  data <- read.table('u.data', header=TRUE, sep="\t", row.names=NULL)
-  usefulData <- data.frame(user = data$uid, item = data$itemId, rating = data$rating)
-  ratingMatrix = as(usefulData, 'realRatingMatrix')
+  # todo: 
+  connection = connectDB()
+  dbGetInfo(connection)
+  data = dbReadTable(connection, 
+    'uirtable')
+  
+  usefulData <- data.frame(user = data$uid, item = data$itemid, rating = data$rating)
+  ratingMatrix = as(data, 'realRatingMatrix')
   userVector = ratingMatrix[userID,]
   if(!file.exists('./recModel.rds')){
     recModel <- Recommender(ratingMatrix[1:500], method='IBCF')
@@ -12,3 +31,5 @@ ibcfRec = function(userID){
   recommendation <- predict(recModel, userVector, n=10)
   as(recommendation, "list")  
 }
+
+ibcfRec('501')
