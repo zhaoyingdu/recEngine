@@ -28,6 +28,7 @@ ibcfRec = function(userID,ip){
     recModel<-readRDS('../files/recModel.rds')
   }
   recommendation <- predict(recModel, userVector, n=10)
-  as(recommendation, "list")  
+  namedList<- as(recommendation, "list") 
+  namedList[[1]] 
 }
 
