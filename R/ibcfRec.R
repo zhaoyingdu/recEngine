@@ -6,7 +6,7 @@ connectDB <- function(ip){
   password<-'zhaoyingdu'
   driver<-dbDriver('PostgreSQL')
   connection<-dbConnect(drv = driver, dbname='temp',
-      host='192.168.0.16', port = 5109,
+      host=ip, port = 5109,
       user=username, password = password
     )
 }
