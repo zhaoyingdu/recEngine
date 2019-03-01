@@ -6,12 +6,12 @@ connectDB <- function(ip){
   password<-'zhaoyingdu'
   driver<-dbDriver('PostgreSQL')
   connection<-dbConnect(drv = driver, dbname='temp',
-      host=ip, port = 5109,
+      host='192.168.0.16', port = 5109,
       user=username, password = password
     )
 }
 
-ibcfRec = function(userID, ip){
+ibcfRec = function(userID,ip){
   # todo: 
   connection = connectDB(ip)
   print(dbGetInfo(connection))
