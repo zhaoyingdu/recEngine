@@ -1,19 +1,19 @@
 require('RPostgreSQL')
 require('recommenderlab')
 
-connectDB <- function(){
+connectDB <- function(ip){
   username<-'postgres'
   password<-'zhaoyingdu'
   driver<-dbDriver('PostgreSQL')
   connection<-dbConnect(drv = driver, dbname='temp',
-      host='172.17.86.131', port = 5109,
+      host=ip, port = 5109,
       user=username, password = password
     )
 }
 
-ibcfRec = function(userID){
+ibcfRec = function(userID, ip){
   # todo: 
-  connection = connectDB()
+  connection = connectDB(ip)
   print(dbGetInfo(connection))
   data = dbReadTable(connection, 
     'uirtable')
