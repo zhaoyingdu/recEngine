@@ -21,11 +21,11 @@ ibcfRec = function(userID,ip){
   usefulData <- data.frame(user = data$uid, item = data$itemid, rating = data$rating)
   ratingMatrix = as(data, 'realRatingMatrix')
   userVector = ratingMatrix[userID,]
-  if(!file.exists('/files/recModel.rds')){
+  if(!file.exists('../files/recModel.rds')){
     recModel <- Recommender(ratingMatrix[1:500], method='IBCF')
     saveRDS(recModel, 'recModel.rds')
   }else{
-    recModel<-readRDS('/files/recModel.rds')
+    recModel<-readRDS('../files/recModel.rds')
   }
   recommendation <- predict(recModel, userVector, n=10)
   as(recommendation, "list")  
