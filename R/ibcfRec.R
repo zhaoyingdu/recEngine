@@ -29,6 +29,6 @@ ibcfRec = function(userID,ip){
   }
   recommendation <- predict(recModel, userVector, n=10)
   namedList<- as(recommendation, "list") 
-  namedList[[1]] 
+  namedList[[1]]
 }
 
