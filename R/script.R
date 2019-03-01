@@ -1,1 +1,0 @@
-print(readRDS('hi.rds'))

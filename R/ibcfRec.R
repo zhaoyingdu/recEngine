@@ -9,11 +9,7 @@ connectDB <- function(){
       host='172.17.86.131', port = 5109,
       user=username, password = password
     )
-  #print(dbGetInfo(connection))
 }
-
-
-
 
 ibcfRec = function(userID){
   # todo: 
