@@ -116,8 +116,8 @@ ibcfRec = function(userID){
   }
 
   matrixModel = fetchMatrixAndModel(con)
-  recList = getRecList(userID, matrixModel[[1]], matrixModel[[2]])
-  toJSON(recList)
+  getRecList(userID, matrixModel[[1]], matrixModel[[2]])
+  #toJSON(recList)
 }
 
 ibcfRec('501')
