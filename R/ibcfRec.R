@@ -108,30 +108,3 @@ popularRec = function(bookId){
   model = getModel(con)
   getRecList(testRatingMatrix, model) 
 }
-
-
-print('user dummy\n')
-print(userRec('dummy'))
-print('user a\n')
-print(userRec('a'))
-print('user 501\n')
-print(userRec('501'))
-
-
-if(FALSE){
-print('1\n')
-print(popularRec('1'))
-print('2\n')
-print(popularRec('2'))
-print('3\n')
-print(popularRec('3'))
-}
-print('500\n')
-print(popularRec('500'))
-print('600\n')
-print(popularRec('600'))
-print('700\n')
-print(popularRec('700'))
-#TODO: COVERT 0S' TO NA to get it work
-
-
