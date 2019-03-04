@@ -21,35 +21,33 @@ connectDB <- function(){
 # as too long many provide outdated recommendations, 
 # while too often may be an over kill, 
 # because calculating these takes very long time.
-storeIbcfModel = function(connection){
-  data = dbReadTable(connection,'uirtable')
-  usefulData <- data.frame(user = data$uid, item = data$itemid, rating = data$rating)
+storeIbcfModel = function(con){
+  data = dbReadTable(con,'transaction')
+  usefulData <- data.frame(user = data$uid, item = data$isbn, rating = data$quantity)
   ratingMatrix <- as(usefulData, 'realRatingMatrix')  # save this value
   recModel <- Recommender(ratingMatrix[1:500], method='IBCF')
-  res = dbSendStatement(con, 'insert into binarydata values($1::bytea, $2::bytea)')
-  dbBind(res, params=list(
-    as.blob(serialize(ratingMatrix,con=NULL)),
-    as.blob(serialize(recModel,con=NULL))
-    ))
+  res = dbSendStatement(con, 'insert into model values($1::bytea)')
+  dbBind(res, params=list(as.blob(serialize(recModel,con=NULL))))
   dbClearResult(res)
 }
+
 
 # get ratingMatrix and recommender model from database
 # this function should only be called when there is surely 
 # such data in db
 # return a vector: [[1]] matrix, [[2]]model
-fetchMatrixAndModel = function(connection){ 
-  res=dbSendQuery(connection, 'SELECT * from binarydata')
+
+
+getModel=function(connection){ 
+  res=dbSendQuery(connection, 'SELECT * from model')
   data=dbFetch(res,n=1)
   dbClearResult(res)
 
-  matrix = unserialize(data[1,1][[1]])
-  model = unserialize(data[1,2][[1]])
-  print(matrix)
-  print(model)
-  c(matrix, model)
+  model = unserialize(data[1,1][[1]])
+
 
 }
+
 
 # get a fresh user vector
 # idea behind is that we can keep recommender model longer and older
@@ -58,8 +56,8 @@ fetchMatrixAndModel = function(connection){
 # therefore, we are encouraged to use fresh user vector,
 # as opposed to fetch it from the rating matrix stored in the binarydata table
 getUserVector = function(con, userID){
-  data = dbReadTable(con, 'uirtable')
-  usefulData <- data.frame(user = data$uid, item = data$itemid, rating = data$rating)
+  data = dbReadTable(con, 'transaction')
+  usefulData <- data.frame(user = data$uid, item = data$isbn, rating = data$quantity)
   ratingMatrix <- as(usefulData, 'realRatingMatrix')
   #print(ratingMatrix)
   userVector = ratingMatrix[userID,]
@@ -73,15 +71,15 @@ getUserVector = function(con, userID){
 # matrix-rating matrix to be used
 # model - rating model to be used
 
-getRecList = function(userID,matrix,model){
-  userVector = matrix[userID,]
+getRecList = function(userVector,model){
+  #userVector = matrix[userID,]
   recommendation <- predict(model, userVector, n=10)
   namedList<- as(recommendation, "list") 
   namedList[[1]]
 }
 
 dataExist = function(con){
-  res = dbGetQuery(con, 'select count(*) from binarydata')
+  res = dbGetQuery(con, 'select count(*) from model')
   if(res == 1){
     TRUE
   }else{
@@ -90,34 +88,13 @@ dataExist = function(con){
 }
 
 ibcfRec = function(userID){
- 
-  if(FALSE){ # BLOCK commented unused code
-    data = dbReadTable(connection, 
-      'uirtable')
-    
-    usefulData <- data.frame(user = data$uid, item = data$itemid, rating = data$rating)
-    ratingMatrix <- as(usefulData, 'realRatingMatrix')
-    userVector = ratingMatrix[userID,]
-    if(!file.exists('../files/recModel.rds')){
-      recModel <- Recommender(ratingMatrix[1:500], method='IBCF')
-      saveRDS(recModel, 'recModel.rds')
-    }else{
-      recModel<-readRDS('../files/recModel.rds')
-    }
-    recommendation <- predict(recModel, userVector, n=10)
-    namedList<- as(recommendation, "list") 
-    namedList[[1]]
-  }
-
-
   con = connectDB()
   if(!dataExist(con)){
     storeIbcfModel(con)
   }
-
-  matrixModel = fetchMatrixAndModel(con)
-  getRecList(userID, matrixModel[[1]], matrixModel[[2]])
-  #toJSON(recList)
+  userVector = getUserVector(con,userID)
+  #matrixModel = fetchMatrixAndModel(con)
+  model = getModel(con)
+  getRecList(userVector,model) #matrixModel[[1]], matrixModel[[2]])
 }
 
-ibcfRec('501')
