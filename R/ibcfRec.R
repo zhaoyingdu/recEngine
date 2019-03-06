@@ -15,7 +15,6 @@ connectDB <- function(){
     password = 'NeverSendThePassInSlack')
 }
 
-tableName = 
 
 # store freshly computed RatingMatrix and Recommender model to database
 # developer can decide how long to keep this data,
