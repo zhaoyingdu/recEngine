@@ -6,7 +6,7 @@ require('RPostgres')
 require('recommenderlab')
 require('blob')
 require('jsonlite')
-
+  
 connectDB <- function(){
   dbConnect(RPostgres::Postgres(),dbname = 'postgres', 
     host = 'pvpcraft.ca', # i.e. 'ec2-54-83-201-96.compute-1.amazonaws.com'
